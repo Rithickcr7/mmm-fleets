@@ -673,17 +673,51 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal, .rl, .rr').forEach(el => observer.observe(el));
 
 // Form submit - visual feedback for enquiry (Fixed Complete Script)
-function handleSubmit(btn) {
-    btn.textContent = '✅ Enquiry Sent Successfully!';
-    btn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
-    btn.style.color = '#ffffff';
+function handleSubmit(btn){
+
+    const form = btn.closest('.con-form');
+
+    const name = form.querySelector('input[type="text"]').value.trim();
+    const phone = form.querySelector('input[type="tel"]').value.trim();
+    const email = form.querySelector('input[type="email"]').value.trim();
+    const service = form.querySelector('select').value;
+    const message = form.querySelector('textarea').value.trim();
+
+    // Validation
+    if(!name || !phone){
+        alert("Please enter Name and Phone Number");
+        return;
+    }
+
+    // Button loading state
+    btn.textContent = '⏳ Sending...';
     btn.disabled = true;
-    setTimeout(() => {
-        btn.textContent = 'Send Enquiry →';
-        btn.style.background = 'linear-gradient(135deg, var(--gold), var(--gold2))';
-        btn.style.color = '#0f172a';
-        btn.disabled = false;
-    }, 3000);
+
+    // WhatsApp formatted message
+    const text = `🚗 MMM Fleets Enquiry:%0A
+----------------------------%0A
+Name: ${name}%0A
+Phone: ${phone}%0A
+Email: ${email}%0A
+Service: ${service}%0A
+----------------------------%0A
+${message}`;
+
+    // Open WhatsApp
+    window.open(`https://wa.me/919790707733?text=${text}`, '_blank');
+
+    // Success UI
+    setTimeout(()=>{
+        btn.textContent = '✅ Enquiry Sent!';
+        btn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+
+        setTimeout(()=>{
+            btn.textContent = 'Send Enquiry →';
+            btn.style.background = 'linear-gradient(135deg, var(--gold), var(--gold2))';
+            btn.disabled = false;
+        },3000);
+
+    },1000);
 }
 </script>
 </body>
